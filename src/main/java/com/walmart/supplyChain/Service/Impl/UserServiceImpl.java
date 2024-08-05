@@ -39,19 +39,20 @@ public class UserServiceImpl implements UserService {
         if (user1 != null) {
             String password = loginDto.getPassword();
             String encodedPassword = user1.getPassword();
+            int userId = user1.getUserId();
             Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
             if (isPwdRight) {
                 Optional<User> user = userRepo.findOneByEmailAndPassword(loginDto.getEmail(), encodedPassword);
                 if (user.isPresent()) {
-                    return new LoginResponse("Login Success", true);
+                    return new LoginResponse("Login Success", true, userId);
                 } else {
-                    return new LoginResponse("Login Failed", false);
+                    return new LoginResponse("Login Failed", false, -1);
                 }
             } else {
-                return new LoginResponse("password Not Match", false);
+                return new LoginResponse("password Not Match", false, -1);
             }
         }else {
-            return new LoginResponse("Email not exits", false);
+            return new LoginResponse("Email not exits", false, -1);
         }
     }
 }
