@@ -19,7 +19,6 @@ public class User {
         private String password;
         @Column(name="role", length = 255)
         private String role;
-
         @Column(name="addr", length = 255)
         private String addr;
 
