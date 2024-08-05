@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -15,5 +16,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
+    }
+
+    public Optional<Product> reduceAvailability(Long id) {
+        Optional<Product> product = getProductById(id);
+        if (product.isPresent()) {
+            Product updatedProduct = product.get();
+            if (updatedProduct.getAvailability() > 0) {
+                updatedProduct.setAvailability(updatedProduct.getAvailability() - 1);
+                return Optional.of(productRepository.save(updatedProduct));
+            }
+        }
+        return Optional.empty();
     }
 }
