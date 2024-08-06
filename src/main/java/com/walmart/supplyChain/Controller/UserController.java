@@ -3,6 +3,7 @@ package com.walmart.supplyChain.Controller;
 import com.walmart.supplyChain.Payload.LoginResponse;
 import com.walmart.supplyChain.Dto.LoginDto;
 import com.walmart.supplyChain.Dto.UserDto;
+import com.walmart.supplyChain.Payload.SignUpResponse;
 import com.walmart.supplyChain.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,10 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(path = "/signUp")
-    public String signUp(@RequestBody UserDto userDto)
+    public ResponseEntity<?> signUp(@RequestBody UserDto userDto)
     {
-        String id = userService.addUser(userDto);
-        return id;
+        SignUpResponse signUpResponse = userService.addUser(userDto);
+        return ResponseEntity.ok(signUpResponse);
     }
 
     @PostMapping(path = "/login")
