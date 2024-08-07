@@ -4,6 +4,7 @@ import com.walmart.supplyChain.Payload.LoginResponse;
 import com.walmart.supplyChain.Dto.LoginDto;
 import com.walmart.supplyChain.Dto.UserDto;
 import com.walmart.supplyChain.Entity.User;
+import com.walmart.supplyChain.Payload.SignUpResponse;
 import com.walmart.supplyChain.Repository.UserRepo;
 import com.walmart.supplyChain.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,11 @@ public class UserServiceImpl implements UserService {
     private UserRepo userRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    UserDto userDto;
+
     @Override
-    public String addUser(UserDto userDto) {
+    public SignUpResponse addUser(UserDto userDto) {
         User user = new User(
                 userDto.getUserId(),
                 userDto.getName(),
@@ -29,9 +33,11 @@ public class UserServiceImpl implements UserService {
                 userDto.getAddr()
         );
         userRepo.save(user);
-        return user.getName();
+        User user1 = userRepo.findByEmail(userDto.getEmail());
+        return new SignUpResponse("Sign up Successful",user1.getName(),user1.getUserId());
     }
-    UserDto userDto;
+
+
     @Override
     public LoginResponse  loginUser(LoginDto loginDto) {
         String msg = "";
@@ -44,15 +50,15 @@ public class UserServiceImpl implements UserService {
             if (isPwdRight) {
                 Optional<User> user = userRepo.findOneByEmailAndPassword(loginDto.getEmail(), encodedPassword);
                 if (user.isPresent()) {
-                    return new LoginResponse("Login Success", true, userId);
+                    return new LoginResponse("Login Success", true, userId, user1.getRole());
                 } else {
-                    return new LoginResponse("Login Failed", false, -1);
+                    return new LoginResponse("Login Failed", false, -1,"");
                 }
             } else {
-                return new LoginResponse("password Not Match", false, -1);
+                return new LoginResponse("password Not Match", false, -1,"");
             }
         }else {
-            return new LoginResponse("Email not exits", false, -1);
+            return new LoginResponse("Email not exits", false, -1,"");
         }
     }
 }
