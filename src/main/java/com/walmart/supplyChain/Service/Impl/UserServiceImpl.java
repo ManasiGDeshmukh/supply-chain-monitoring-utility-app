@@ -61,4 +61,9 @@ public class UserServiceImpl implements UserService {
             return new LoginResponse("Email not exits", false, -1,"");
         }
     }
+
+    @Override
+    public User getUser(int userid) {
+        return userRepo.findByUserId(userid);
+    }
 }

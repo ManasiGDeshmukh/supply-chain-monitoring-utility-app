@@ -29,4 +29,10 @@ public class UserController {
         LoginResponse loginResponse = userService.loginUser(loginDto);
         return ResponseEntity.ok(loginResponse);
     }
+    @GetMapping(path = "/user/{userid}")
+    public ResponseEntity<?> login(@PathVariable int userid)
+    {
+
+        return ResponseEntity.ok(userService.getUser(userid));
+    }
 }
